@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.*;
 import moe.feng.common.view.breadcrumbs.model.BreadcrumbItem;
 
@@ -126,15 +127,21 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 			});
 			popupWindow = new ListPopupWindow(getContext());
 			popupWindow.setAnchorView(imageButton);
-			popupWindow.setWidth(ListPopupWindow.MATCH_PARENT);
-			popupWindow.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
-				public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 					if (callback != null) {
 						callback.onItemChange(parent, getAdapterPosition() / 2, getItems().get(getAdapterPosition() / 2 + 1).getItems().get(i));
+						popupWindow.dismiss();
 					}
 				}
-				@Override public void onNothingSelected(AdapterView<?> adapterView) {}
+			});
+			imageButton.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+				@Override
+				public void onGlobalLayout() {
+					popupWindow.setVerticalOffset(-imageButton.getMeasuredHeight());
+					imageButton.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				}
 			});
 		}
 
@@ -142,13 +149,21 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		public void setItem(BreadcrumbItem item) {
 			super.setItem(item);
 			imageButton.setClickable(item.hasMoreSelect());
-			List<Map<String, String>> list = new ArrayList<>();
-			for (Object obj : item.getItems()) {
-				Map<String, String> map = new HashMap<>();
-				map.put("text", obj.toString());
-				list.add(map);
+			if (item.hasMoreSelect()) {
+				List<Map<String, String>> list = new ArrayList<>();
+				for (Object obj : item.getItems()) {
+					Map<String, String> map = new HashMap<>();
+					map.put("text", obj.toString());
+					list.add(map);
+				}
+				// Kotlin: item.getItems().map { "text" to it.toString() }
+				ListAdapter adapter = new SimpleAdapter(getContext(), list, android.R.layout.simple_list_item_1, new String[] {"text"}, new int[] {android.R.id.text1});
+				popupWindow.setAdapter(adapter);
+				popupWindow.setWidth(ViewUtils.measureContentWidth(getContext(), adapter));
+				imageButton.setOnTouchListener(popupWindow.createDragToOpenListener(imageButton));
+			} else {
+				imageButton.setOnTouchListener(null);
 			}
-			popupWindow.setAdapter(new SimpleAdapter(getContext(), list, android.R.layout.simple_list_item_1, new String[] {"text"}, new int[] {android.R.id.text1}));
 		}
 
 	}

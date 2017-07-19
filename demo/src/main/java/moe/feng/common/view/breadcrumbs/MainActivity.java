@@ -46,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void onItemChange(BreadcrumbsView view, int parentPosition, Object nextItem) {
+			public void onNavigateNewLocation(BreadcrumbItem newItem, int changedPosition) {
 				Snackbar.make(
 						mCoordinatorLayout,
-						"onItemChange: " + parentPosition + " nextTitle=" + nextItem,
+						"onItemChange: " + changedPosition + " nextTitle=" + newItem.getSelectedItemTitle(),
 						Snackbar.LENGTH_LONG
 				).show();
 			}

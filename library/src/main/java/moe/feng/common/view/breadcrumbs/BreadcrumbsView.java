@@ -65,6 +65,10 @@ public class BreadcrumbsView extends FrameLayout {
 		}, 500);
 	}
 
+	public void notifyItemChanged(int index) {
+		mAdapter.notifyItemChanged(index * 2);
+	}
+
 	public void addItem(@NonNull BreadcrumbItem item) {
 		int oldSize = mAdapter.getItemCount();
 		mAdapter.getItems().add(item);
@@ -89,7 +93,9 @@ public class BreadcrumbsView extends FrameLayout {
 			postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					mAdapter.notifyItemChanged(beforePos * 2 - 1 - 1);
+					int currentPos = beforePos * 2 - 1 - 1;
+					mAdapter.notifyItemChanged(currentPos);
+					mRecyclerView.smoothScrollToPosition(currentPos);
 				}
 			}, 100);
 		}

@@ -23,6 +23,13 @@ public class BreadcrumbItem {
 		}
 	}
 
+	public void setSelectedItem(Object selectedItem) {
+		this.mSelectedIndex = mItems.indexOf(selectedItem);
+		if (mSelectedIndex == -1) {
+			throw new IllegalArgumentException("This item does not exist in items.");
+		}
+	}
+
 	public void setSelectedIndex(int selectedIndex) {
 		this.mSelectedIndex = selectedIndex;
 	}
