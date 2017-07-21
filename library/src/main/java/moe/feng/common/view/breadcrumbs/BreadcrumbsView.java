@@ -99,18 +99,18 @@ public class BreadcrumbsView extends FrameLayout {
 		}, 500);
 	}
 
-	public void removeItemBefore(final int beforePos) {
-		if (beforePos <= mAdapter.getItems().size() - 1) {
+	public void removeItemAfter(final int afterPos) {
+		if (afterPos <= mAdapter.getItems().size() - 1) {
 			int oldSize = mAdapter.getItemCount();
-			while (mAdapter.getItems().size() > beforePos) {
+			while (mAdapter.getItems().size() > afterPos) {
 				mAdapter.getItems().remove(mAdapter.getItems().size() - 1);
 			}
-			mAdapter.notifyItemRangeRemoved(beforePos * 2 - 1, oldSize - beforePos);
+			mAdapter.notifyItemRangeRemoved(afterPos * 2 - 1, oldSize - afterPos);
 			/* Add delay time to fix animation */
 			postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					int currentPos = beforePos * 2 - 1 - 1;
+					int currentPos = afterPos * 2 - 1 - 1;
 					mAdapter.notifyItemChanged(currentPos);
 					mRecyclerView.smoothScrollToPosition(currentPos);
 				}
@@ -119,7 +119,7 @@ public class BreadcrumbsView extends FrameLayout {
 	}
 
 	public void removeLastItem() {
-		removeItemBefore(mAdapter.getItems().size() - 1);
+		removeItemAfter(mAdapter.getItems().size() - 1);
 	}
 
 	public void setCallback(BreadcrumbsCallback callback) {
