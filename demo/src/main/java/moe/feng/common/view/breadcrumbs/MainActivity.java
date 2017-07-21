@@ -1,8 +1,13 @@
 package moe.feng.common.view.breadcrumbs;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -19,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 	private CoordinatorLayout mCoordinatorLayout;
 
 	private int counter = 3;
+
+	private static final int REQUEST_PERMISSION_CODE = 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,35 @@ public class MainActivity extends AppCompatActivity {
 				mBreadcrumbsView.addItem(createItem("Path " + counter++));
 			}
 		});
+		findViewById(R.id.btn_simple_file_manager).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (ContextCompat.checkSelfPermission(MainActivity.this,
+						Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+					ActivityCompat.requestPermissions(MainActivity.this,
+							new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_CODE);
+				} else {
+					openFileManager();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		if (requestCode == REQUEST_PERMISSION_CODE) {
+			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				openFileManager();
+			} else {
+				// I am lazy. It's unnecessary to tell a developer why cannot deny the permission.
+			}
+		}
+	}
+
+	private void openFileManager() {
+		Intent intent = new Intent(this, SimpleFileManagerActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 	}
 
 	private static BreadcrumbItem createItem(String title) {

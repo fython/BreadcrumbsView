@@ -6,6 +6,7 @@ public abstract class DefaultBreadcrumbsCallback implements BreadcrumbsCallback 
 
 	@Override
 	public void onItemClick(BreadcrumbsView view, int position) {
+		if (position == view.getItems().size() - 1) return;
 		view.removeItemBefore(position + 1);
 		this.onNavigateBack(view.getItems().get(position), position);
 	}

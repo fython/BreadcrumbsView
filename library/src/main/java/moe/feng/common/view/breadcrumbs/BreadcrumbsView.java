@@ -67,6 +67,10 @@ public class BreadcrumbsView extends FrameLayout {
 		return mAdapter.getItems();
 	}
 
+	public BreadcrumbItem getCurrentItem() {
+		return mAdapter.getItems().get(mAdapter.getItems().size() - 1);
+	}
+
 	public void setItems(@Nullable ArrayList<BreadcrumbItem> items) {
 		mAdapter.setItems(items);
 		mAdapter.notifyDataSetChanged();

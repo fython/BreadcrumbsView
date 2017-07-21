@@ -124,7 +124,11 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 				@Override
 				public void onClick(View view) {
 					if (item.hasMoreSelect()) {
-						popupWindow.show();
+						try {
+							popupWindow.show();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			});

@@ -21,4 +21,10 @@
 			android:id="@+id/btn_add_more"
 			android:text="Add more"/>
 
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/btn_simple_file_manager"
+			android:text="Simple File Manager"/>
+
 </LinearLayout>
