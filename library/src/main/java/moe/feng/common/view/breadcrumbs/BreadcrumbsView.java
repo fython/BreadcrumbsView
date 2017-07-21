@@ -1,6 +1,7 @@
 package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ public class BreadcrumbsView extends FrameLayout {
 	private RecyclerView mRecyclerView;
 	private BreadcrumbsAdapter mAdapter;
 
+	private int mPopupThemeId = -1;
+
 	public BreadcrumbsView(Context context) {
 		this(context, null);
 	}
@@ -28,6 +31,13 @@ public class BreadcrumbsView extends FrameLayout {
 
 	public BreadcrumbsView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+
+		if (attrs != null) {
+			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BreadcrumbsView, defStyleAttr, 0);
+			mPopupThemeId = a.getResourceId(R.styleable.BreadcrumbsView_popupTheme, -1);
+			a.recycle();
+		}
+
 		init();
 	}
 
@@ -46,6 +56,9 @@ public class BreadcrumbsView extends FrameLayout {
 		}
 		if (mAdapter == null) {
 			mAdapter = new BreadcrumbsAdapter(this);
+			if (mPopupThemeId != -1) {
+				mAdapter.setPopupThemeId(mPopupThemeId);
+			}
 		}
 		mRecyclerView.setAdapter(mAdapter);
 	}

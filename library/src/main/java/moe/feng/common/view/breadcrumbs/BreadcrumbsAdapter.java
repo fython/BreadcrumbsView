@@ -3,11 +3,7 @@ package moe.feng.common.view.breadcrumbs;
 import android.content.Context;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.*;
 import android.widget.*;
 import moe.feng.common.view.breadcrumbs.model.BreadcrumbItem;
 
@@ -18,19 +14,23 @@ import java.util.Map;
 
 class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHolder> {
 
+	private final int DROPDOWN_OFFSET_Y_FIX;
+
 	private List<BreadcrumbItem> items;
 	private BreadcrumbsCallback callback;
 
 	private BreadcrumbsView parent;
 
+	private int mPopupThemeId = -1;
+
 	public BreadcrumbsAdapter(BreadcrumbsView parent) {
-		this.parent = parent;
-		this.items = new ArrayList<>();
+		this(parent, new ArrayList<BreadcrumbItem>());
 	}
 
 	public BreadcrumbsAdapter(BreadcrumbsView parent, ArrayList<BreadcrumbItem> items) {
 		this.parent = parent;
 		this.items = items;
+		DROPDOWN_OFFSET_Y_FIX = parent.getResources().getDimensionPixelOffset(R.dimen.dropdown_offset_y_fix_value);
 	}
 
 	public List<BreadcrumbItem> getItems() {
@@ -47,6 +47,10 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	public BreadcrumbsCallback getCallback() {
 		return this.callback;
+	}
+
+	public void setPopupThemeId(int popupThemeId) {
+		this.mPopupThemeId = popupThemeId;
 	}
 
 	@Override
@@ -80,9 +84,9 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	class BreadcrumbItemHolder extends ItemHolder<BreadcrumbItem> {
 
-		public Button button;
+		Button button;
 
-		public BreadcrumbItemHolder(View itemView) {
+		BreadcrumbItemHolder(View itemView) {
 			super(itemView);
 			button = (Button) itemView;
 			button.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +103,6 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		public void setItem(BreadcrumbItem item) {
 			super.setItem(item);
 			button.setText(item.getSelectedItemTitle());
-			Log.i("TAG", "title:" + item.getSelectedItemTitle() + " alpha:" + (getAdapterPosition() == getItemCount() - 1 ? .87f : .54f));
 			button.setTextColor(
 					ViewUtils.getColorFromAttr(getContext(),
 							getAdapterPosition() == getItemCount() - 1
@@ -111,10 +114,10 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	class ArrowIconHolder extends ItemHolder<BreadcrumbItem> {
 
-		public ImageButton imageButton;
+		ImageButton imageButton;
 		ListPopupWindow popupWindow;
 
-		public ArrowIconHolder(View itemView) {
+		ArrowIconHolder(View itemView) {
 			super(itemView);
 			imageButton = (ImageButton) itemView;
 			imageButton.setOnClickListener(new View.OnClickListener() {
@@ -125,24 +128,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 					}
 				}
 			});
-			popupWindow = new ListPopupWindow(getContext());
-			popupWindow.setAnchorView(imageButton);
-			popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-					if (callback != null) {
-						callback.onItemChange(parent, getAdapterPosition() / 2, getItems().get(getAdapterPosition() / 2 + 1).getItems().get(i));
-						popupWindow.dismiss();
-					}
-				}
-			});
-			imageButton.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-				@Override
-				public void onGlobalLayout() {
-					popupWindow.setVerticalOffset(-imageButton.getMeasuredHeight());
-					imageButton.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-				}
-			});
+			createPopupWindow();
 		}
 
 		@Override
@@ -157,22 +143,43 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 					list.add(map);
 				}
 				// Kotlin: item.getItems().map { "text" to it.toString() }
-				ListAdapter adapter = new SimpleAdapter(getContext(), list, android.R.layout.simple_list_item_1, new String[] {"text"}, new int[] {android.R.id.text1});
+				ListAdapter adapter = new SimpleAdapter(getPopupThemedContext(), list, R.layout.breadcrumbs_view_dropdown_item, new String[] {"text"}, new int[] {android.R.id.text1});
 				popupWindow.setAdapter(adapter);
-				popupWindow.setWidth(ViewUtils.measureContentWidth(getContext(), adapter));
+				popupWindow.setWidth(ViewUtils.measureContentWidth(getPopupThemedContext(), adapter));
 				imageButton.setOnTouchListener(popupWindow.createDragToOpenListener(imageButton));
 			} else {
 				imageButton.setOnTouchListener(null);
 			}
 		}
 
+		private void createPopupWindow() {
+			popupWindow = new ListPopupWindow(getPopupThemedContext());
+			popupWindow.setAnchorView(imageButton);
+			popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+					if (callback != null) {
+						callback.onItemChange(parent, getAdapterPosition() / 2, getItems().get(getAdapterPosition() / 2 + 1).getItems().get(i));
+						popupWindow.dismiss();
+					}
+				}
+			});
+			imageButton.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+				@Override
+				public void onGlobalLayout() {
+					popupWindow.setVerticalOffset(-imageButton.getMeasuredHeight() + DROPDOWN_OFFSET_Y_FIX);
+					imageButton.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				}
+			});
+		}
+
 	}
 
 	class ItemHolder<T> extends RecyclerView.ViewHolder {
 
-		protected T item;
+		T item;
 
-		public ItemHolder(View itemView) {
+		ItemHolder(View itemView) {
 			super(itemView);
 		}
 
@@ -180,8 +187,12 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 			this.item = item;
 		}
 
-		protected Context getContext() {
+		Context getContext() {
 			return itemView.getContext();
+		}
+
+		Context getPopupThemedContext() {
+			return mPopupThemeId != -1 ? new ContextThemeWrapper(getContext(), mPopupThemeId) : getContext();
 		}
 
 	}
