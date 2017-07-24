@@ -102,7 +102,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		@Override
 		public void setItem(BreadcrumbItem item) {
 			super.setItem(item);
-			button.setText(item.getSelectedItemTitle());
+			button.setText(item.getSelectedItem());
 			button.setTextColor(
 					ViewUtils.getColorFromAttr(getContext(),
 							getAdapterPosition() == getItemCount() - 1

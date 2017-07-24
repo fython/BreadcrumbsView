@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,14 @@ public class FileList {
 	public List<FileWrapper> files;
 
 	private FileList() {}
+
+	public List<String> getDirectoriesString() {
+		List<String> result = new ArrayList<>();
+		for (FileWrapper dir : directories) {
+			result.add(dir.toString());
+		}
+		return result;
+	}
 
 	public static FileList newInstance(String path) {
 		FileList fileList = new FileList();

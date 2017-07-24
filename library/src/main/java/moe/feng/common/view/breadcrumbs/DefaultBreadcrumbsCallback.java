@@ -12,7 +12,7 @@ public abstract class DefaultBreadcrumbsCallback implements BreadcrumbsCallback 
 	}
 
 	@Override
-	public void onItemChange(BreadcrumbsView view, int parentPosition, Object nextItem) {
+	public void onItemChange(BreadcrumbsView view, int parentPosition, String nextItem) {
 		BreadcrumbItem nextBreadcrumb = view.getItems().get(parentPosition + 1);
 		nextBreadcrumb.setSelectedItem(nextItem);
 		view.removeItemAfter(parentPosition + 2);

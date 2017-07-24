@@ -24,7 +24,7 @@
 		<moe.feng.common.view.breadcrumbs.BreadcrumbsView
 				android:id="@+id/breadcrumbs_view"
 				android:layout_width="match_parent"
-				android:layout_height="?attr/actionBarSize"
+				android:layout_height="wrap_content"
 				app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
 	</android.support.design.widget.AppBarLayout>

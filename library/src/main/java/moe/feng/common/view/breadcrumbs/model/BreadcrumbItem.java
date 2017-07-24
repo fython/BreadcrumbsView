@@ -8,13 +8,13 @@ import java.util.List;
 public class BreadcrumbItem {
 
 	private int mSelectedIndex = -1;
-	private List mItems;
+	private List<String> mItems;
 
-	public BreadcrumbItem(@NonNull List items) {
+	public BreadcrumbItem(@NonNull List<String> items) {
 		this(items, 0);
 	}
 
-	public BreadcrumbItem(@NonNull List items, int selectedIndex) {
+	public BreadcrumbItem(@NonNull List<String> items, int selectedIndex) {
 		if (items != null && !items.isEmpty()) {
 			this.mItems = items;
 			this.mSelectedIndex = selectedIndex;
@@ -23,7 +23,7 @@ public class BreadcrumbItem {
 		}
 	}
 
-	public void setSelectedItem(Object selectedItem) {
+	public void setSelectedItem(String selectedItem) {
 		this.mSelectedIndex = mItems.indexOf(selectedItem);
 		if (mSelectedIndex == -1) {
 			throw new IllegalArgumentException("This item does not exist in items.");
@@ -38,23 +38,19 @@ public class BreadcrumbItem {
 		return this.mSelectedIndex;
 	}
 
-	public @NonNull Object getSelectedItem() {
+	public @NonNull String getSelectedItem() {
 		return this.mItems.get(getSelectedIndex());
-	}
-
-	public @NonNull String getSelectedItemTitle() {
-		return getSelectedItem().toString();
 	}
 
 	public boolean hasMoreSelect() {
 		return this.mItems.size() > 1;
 	}
 
-	public void setItems(@NonNull List items) {
+	public void setItems(@NonNull List<String> items) {
 		this.setItems(items, 0);
 	}
 
-	public void setItems(@NonNull List items, int selectedIndex) {
+	public void setItems(@NonNull List<String> items, int selectedIndex) {
 		if (items != null && !items.isEmpty()) {
 			this.mItems = items;
 			this.mSelectedIndex = selectedIndex;
@@ -63,7 +59,7 @@ public class BreadcrumbItem {
 		}
 	}
 
-	public List getItems() {
+	public List<String> getItems() {
 		return mItems;
 	}
 

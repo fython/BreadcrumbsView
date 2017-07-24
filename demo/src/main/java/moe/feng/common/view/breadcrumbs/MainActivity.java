@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 			public void onNavigateBack(BreadcrumbItem item, int position) {
 				Snackbar.make(
 						mCoordinatorLayout,
-						"onNavigateBack: " + position + " titles=" + item.getSelectedItemTitle(),
+						"onNavigateBack: " + position + " titles=" + item.getSelectedItem(),
 						Snackbar.LENGTH_LONG
 				).show();
 			}
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 			public void onNavigateNewLocation(BreadcrumbItem newItem, int changedPosition) {
 				Snackbar.make(
 						mCoordinatorLayout,
-						"onItemChange: " + changedPosition + " nextTitle=" + newItem.getSelectedItemTitle(),
+						"onItemChange: " + changedPosition + " nextTitle=" + newItem.getSelectedItem(),
 						Snackbar.LENGTH_LONG
 				).show();
 			}

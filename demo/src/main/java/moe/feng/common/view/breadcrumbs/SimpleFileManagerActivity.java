@@ -34,8 +34,8 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(FileList.FileWrapper file) {
 				if (file.isDirectory()) {
-					BreadcrumbItem breadcrumbItem = new BreadcrumbItem(mAdapter.getFileList().directories);
-					breadcrumbItem.setSelectedItem(file);
+					BreadcrumbItem breadcrumbItem = new BreadcrumbItem(mAdapter.getFileList().getDirectoriesString());
+					breadcrumbItem.setSelectedItem(file.toString());
 					mBreadcrumbsView.addItem(breadcrumbItem);
 					currentLocation = getCurrentPath();
 					new LoadTask().execute(currentLocation);
@@ -56,7 +56,7 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 
 			@Override
 			public void onNavigateNewLocation(BreadcrumbItem newItem, int changedPosition) {
-				currentLocation = getPath(changedPosition - 1) + "/" + newItem.getSelectedItemTitle();
+				currentLocation = getPath(changedPosition - 1) + "/" + newItem.getSelectedItem();
 				new LoadTask().execute(currentLocation);
 			}
 		});
@@ -72,7 +72,7 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 		if (depth == -1) depth = mBreadcrumbsView.getItems().size() - 1;
 		StringBuffer sb = new StringBuffer(Environment.getExternalStorageDirectory().getAbsolutePath());
 		for (int i = 1; i <= depth; i++) {
-			sb.append("/").append(mBreadcrumbsView.getItems().get(i).getSelectedItemTitle());
+			sb.append("/").append(mBreadcrumbsView.getItems().get(i).getSelectedItem());
 		}
 		return sb.toString();
 	}
