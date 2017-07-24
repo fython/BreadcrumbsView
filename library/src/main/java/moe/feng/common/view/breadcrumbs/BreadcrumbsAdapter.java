@@ -16,7 +16,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	private final int DROPDOWN_OFFSET_Y_FIX;
 
-	private List<BreadcrumbItem> items;
+	private ArrayList<BreadcrumbItem> items;
 	private BreadcrumbsCallback callback;
 
 	private BreadcrumbsView parent;
@@ -33,7 +33,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		DROPDOWN_OFFSET_Y_FIX = parent.getResources().getDimensionPixelOffset(R.dimen.dropdown_offset_y_fix_value);
 	}
 
-	public List<BreadcrumbItem> getItems() {
+	public ArrayList<BreadcrumbItem> getItems() {
 		return this.items;
 	}
 

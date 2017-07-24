@@ -2,6 +2,8 @@ package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,7 +65,7 @@ public class BreadcrumbsView extends FrameLayout {
 		mRecyclerView.setAdapter(mAdapter);
 	}
 
-	public @Nullable List<BreadcrumbItem> getItems() {
+	public @Nullable ArrayList<BreadcrumbItem> getItems() {
 		return mAdapter.getItems();
 	}
 
@@ -128,6 +130,43 @@ public class BreadcrumbsView extends FrameLayout {
 
 	public BreadcrumbsCallback getCallback() {
 		return mAdapter.getCallback();
+	}
+
+	@Override
+	public Parcelable onSaveInstanceState() {
+		Bundle bundle = new Bundle();
+		State state = new State(super.onSaveInstanceState(), getItems());
+		bundle.putParcelable(State.STATE, state);
+		return bundle;
+	}
+
+	@Override
+	public void onRestoreInstanceState(Parcelable state) {
+		if (state instanceof Bundle) {
+			Bundle bundle = (Bundle) state;
+			State viewState = bundle.getParcelable(State.STATE);
+			super.onRestoreInstanceState(viewState.getSuperState());
+			setItems(viewState.getItems());
+			return;
+		}
+		super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
+	}
+
+	protected static class State extends BaseSavedState {
+
+		private static final String STATE = BreadcrumbsView.class.getSimpleName() + ".STATE";
+
+		private final ArrayList<BreadcrumbItem> items;
+
+		State(Parcelable superState, ArrayList<BreadcrumbItem> items) {
+			super(superState);
+			this.items = items;
+		}
+
+		ArrayList<BreadcrumbItem> getItems() {
+			return this.items;
+		}
+
 	}
 
 }

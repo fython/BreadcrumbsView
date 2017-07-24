@@ -3,6 +3,7 @@ package moe.feng.common.view.breadcrumbs;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,9 +17,7 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 	private RecyclerView mRecyclerView;
 	private FileManagerAdapter mAdapter;
 
-	private FileList currentList = null;
-
-	private String currentLocation = Environment.getExternalStorageDirectory().getAbsolutePath();
+	private String currentLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +27,8 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 		setSupportActionBar(toolbar);
 
 		mRecyclerView = findViewById(R.id.recycler_view);
+		mBreadcrumbsView = findViewById(R.id.breadcrumbs_view);
+
 		mAdapter = new FileManagerAdapter();
 		mRecyclerView.setAdapter(mAdapter);
 		mAdapter.setCallback(new FileManagerAdapter.Callback() {
@@ -36,17 +37,14 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 				if (file.isDirectory()) {
 					BreadcrumbItem breadcrumbItem = new BreadcrumbItem(mAdapter.getFileList().getDirectoriesString());
 					breadcrumbItem.setSelectedItem(file.toString());
-					mBreadcrumbsView.addItem(breadcrumbItem);
-					currentLocation = getCurrentPath();
-					new LoadTask().execute(currentLocation);
+					currentLocation = getCurrentPath() + "/" + file.toString();
+					new LoadTask(breadcrumbItem).execute(currentLocation);
 				} else if (file.isFile()) {
 					// Nothing happen lol
 				}
 			}
 		});
 
-		mBreadcrumbsView = findViewById(R.id.breadcrumbs_view);
-		mBreadcrumbsView.addItem(BreadcrumbItem.createSimpleItem("External Storage"));
 		mBreadcrumbsView.setCallback(new DefaultBreadcrumbsCallback() {
 			@Override
 			public void onNavigateBack(BreadcrumbItem item, int position) {
@@ -61,6 +59,17 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 			}
 		});
 
+		if (savedInstanceState == null) {
+			mBreadcrumbsView.addItem(BreadcrumbItem.createSimpleItem("External Storage"));
+			currentLocation = getCurrentPath();
+			new LoadTask().execute(currentLocation);
+		}
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		currentLocation = getCurrentPath();
 		new LoadTask().execute(currentLocation);
 	}
 
@@ -90,6 +99,14 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 
 	private class LoadTask extends AsyncTask<String, Void, FileList> {
 
+		private BreadcrumbItem nextItem;
+
+		LoadTask() {}
+
+		LoadTask(BreadcrumbItem nextItem) {
+			this.nextItem = nextItem;
+		}
+
 		@Override
 		protected FileList doInBackground(String... path) {
 			try {
@@ -105,6 +122,12 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 			if (list != null) {
 				mAdapter.setFileList(list);
 				mAdapter.notifyDataSetChanged();
+				if (nextItem != null) {
+					mBreadcrumbsView.addItem(nextItem);
+				}
+			} else if (nextItem != null) {
+				Snackbar.make(findViewById(R.id.coordinator_layout), "Something wrong", Snackbar.LENGTH_SHORT)
+						.show();
 			}
 		}
 
