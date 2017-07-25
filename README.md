@@ -2,6 +2,8 @@
 
 [![](https://jitpack.io/v/moe.feng/BreadcrumbsView.svg)](https://jitpack.io/#moe.feng/BreadcrumbsView)
 
+![](./.readme/breadcrumbsview.png)
+
 Material Design Breadcrumbs Navigation Widget on Android (SDK 19+, Maybe can be lower)
 
 ![](./.readme/screenshot-demo.png)
