@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.annotation.AttrRes;
+import android.support.annotation.ColorInt;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -11,17 +12,37 @@ import android.widget.ListAdapter;
 
 class ViewUtils {
 
+	/**
+	 * Check if the current language is RTL
+	 *
+	 * @param context Context
+	 * @return Result
+	 */
 	static boolean isRtlLayout(Context context) {
 		return context.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
 	}
 
-	static int getColorFromAttr(Context context, @AttrRes int attr) {
+	/**
+	 * Get color attribute from current theme
+	 *
+	 * @param context Themed context
+	 * @param attr The resource id of color attribute
+	 * @return Result
+	 */
+	@ColorInt static int getColorFromAttr(Context context, @AttrRes int attr) {
 		TypedArray array = context.getTheme().obtainStyledAttributes(new int[]{attr});
 		int color = array.getColor(0, Color.TRANSPARENT);
 		array.recycle();
 		return color;
 	}
 
+	/**
+	 * Measure content width from ListAdapter
+	 *
+	 * @param context Context
+	 * @param listAdapter The adapter that should be measured
+	 * @return Recommend popup window width
+	 */
 	static int measureContentWidth(Context context, ListAdapter listAdapter) {
 		ViewGroup mMeasureParent = null;
 		int maxWidth = 0;

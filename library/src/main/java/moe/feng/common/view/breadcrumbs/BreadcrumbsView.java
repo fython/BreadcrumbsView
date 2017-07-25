@@ -18,9 +18,15 @@ import java.util.List;
 
 public class BreadcrumbsView extends FrameLayout {
 
+	/**
+	 * Internal implement of BreadcrumbsView
+	 */
 	private RecyclerView mRecyclerView;
 	private BreadcrumbsAdapter mAdapter;
 
+	/**
+	 * Popup Menu Theme Id
+	 */
 	private int mPopupThemeId = -1;
 
 	public BreadcrumbsView(Context context) {
@@ -43,19 +49,26 @@ public class BreadcrumbsView extends FrameLayout {
 		init();
 	}
 
+	/**
+	 * Init BreadcrumbsView
+	 */
 	private void init() {
+		// Init RecyclerView
 		if (mRecyclerView == null) {
 			ViewGroup.LayoutParams rvLayoutParams = new ViewGroup.LayoutParams(-1, -1);
 			rvLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
 			mRecyclerView = new RecyclerView(getContext());
 
+			// Create Horizontal LinearLayoutManager
 			LinearLayoutManager layoutManager = new LinearLayoutManager(
 					getContext(), LinearLayoutManager.HORIZONTAL, ViewUtils.isRtlLayout(getContext()));
 			mRecyclerView.setLayoutManager(layoutManager);
 			mRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
 
+			// Add RecyclerView
 			addView(mRecyclerView, rvLayoutParams);
 		}
+		// Init Adapter
 		if (mAdapter == null) {
 			mAdapter = new BreadcrumbsAdapter(this);
 			if (mPopupThemeId != -1) {
@@ -65,14 +78,29 @@ public class BreadcrumbsView extends FrameLayout {
 		mRecyclerView.setAdapter(mAdapter);
 	}
 
+	/**
+	 * Get breadcrumb items list
+	 *
+	 * @return Breadcrumb Items
+	 */
 	public @Nullable ArrayList<BreadcrumbItem> getItems() {
 		return mAdapter.getItems();
 	}
 
+	/**
+	 * Get current breadcrumb item
+	 *
+	 * @return Current item
+	 */
 	public BreadcrumbItem getCurrentItem() {
 		return mAdapter.getItems().get(mAdapter.getItems().size() - 1);
 	}
 
+	/**
+	 * Set breadcrumb items list
+	 *
+	 * @param items Target list
+	 */
 	public void setItems(@Nullable ArrayList<BreadcrumbItem> items) {
 		mAdapter.setItems(items);
 		mAdapter.notifyDataSetChanged();
@@ -84,10 +112,20 @@ public class BreadcrumbsView extends FrameLayout {
 		}, 500);
 	}
 
+	/**
+	 * Notify which item has been changed to update text view
+	 *
+	 * @param index The item position
+	 */
 	public void notifyItemChanged(int index) {
 		mAdapter.notifyItemChanged(index * 2);
 	}
 
+	/**
+	 * Add a new item
+	 *
+	 * @param item New item
+	 */
 	public void addItem(@NonNull BreadcrumbItem item) {
 		int oldSize = mAdapter.getItemCount();
 		mAdapter.getItems().add(item);
@@ -101,6 +139,11 @@ public class BreadcrumbsView extends FrameLayout {
 		}, 500);
 	}
 
+	/**
+	 * Remove items after a position
+	 *
+	 * @param afterPos The first position of the removing range
+	 */
 	public void removeItemAfter(final int afterPos) {
 		if (afterPos <= mAdapter.getItems().size() - 1) {
 			int oldSize = mAdapter.getItemCount();
@@ -120,18 +163,35 @@ public class BreadcrumbsView extends FrameLayout {
 		}
 	}
 
+	/**
+	 * Remove last item
+	 */
 	public void removeLastItem() {
 		removeItemAfter(mAdapter.getItems().size() - 1);
 	}
 
+	/**
+	 * Set BreadcrumbsView callback (Recommend to use DefaultBreadcrumbsCallback)
+	 *
+	 * @param callback Callback should be set
+	 * @see BreadcrumbsCallback
+	 * @see DefaultBreadcrumbsCallback
+	 */
 	public void setCallback(BreadcrumbsCallback callback) {
 		mAdapter.setCallback(callback);
 	}
 
+	/**
+	 * Get callback
+	 *
+	 * @return Callback
+	 * @see BreadcrumbsCallback
+	 */
 	public BreadcrumbsCallback getCallback() {
 		return mAdapter.getCallback();
 	}
 
+	// Save/Restore View Instance State
 	@Override
 	public Parcelable onSaveInstanceState() {
 		Bundle bundle = new Bundle();
