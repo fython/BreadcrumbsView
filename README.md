@@ -2,11 +2,11 @@
 
 [![](https://jitpack.io/v/moe.feng/BreadcrumbsView.svg)](https://jitpack.io/#moe.feng/BreadcrumbsView)
 
-![](./.readme/breadcrumbsview.png)
+<img src="./.readme/breadcrumbsview.png" width="50%"/>
 
 Material Design Breadcrumbs Navigation Widget on Android (SDK 19+, Maybe can be lower)
 
-![](./.readme/screenshot-demo.png)
+<img src="./.readme/screenshot-demo.png" width="50%"/>
 
 ## How to use
 
