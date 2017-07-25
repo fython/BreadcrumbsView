@@ -92,7 +92,10 @@ public class BreadcrumbsView extends FrameLayout {
 	 *
 	 * @return Current item
 	 */
-	public BreadcrumbItem getCurrentItem() {
+	public @Nullable BreadcrumbItem getCurrentItem() {
+		if (mAdapter.getItems().size() <= 0) {
+			return null;
+		}
 		return mAdapter.getItems().get(mAdapter.getItems().size() - 1);
 	}
 
@@ -177,7 +180,7 @@ public class BreadcrumbsView extends FrameLayout {
 	 * @see BreadcrumbsCallback
 	 * @see DefaultBreadcrumbsCallback
 	 */
-	public void setCallback(BreadcrumbsCallback callback) {
+	public void setCallback(@Nullable BreadcrumbsCallback callback) {
 		mAdapter.setCallback(callback);
 	}
 
@@ -187,7 +190,7 @@ public class BreadcrumbsView extends FrameLayout {
 	 * @return Callback
 	 * @see BreadcrumbsCallback
 	 */
-	public BreadcrumbsCallback getCallback() {
+	public @Nullable BreadcrumbsCallback getCallback() {
 		return mAdapter.getCallback();
 	}
 

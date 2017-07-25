@@ -23,33 +23,64 @@ public class BreadcrumbItem {
 		}
 	}
 
-	public void setSelectedItem(String selectedItem) {
+	public void setSelectedItem(@NonNull String selectedItem) {
 		this.mSelectedIndex = mItems.indexOf(selectedItem);
 		if (mSelectedIndex == -1) {
 			throw new IllegalArgumentException("This item does not exist in items.");
 		}
 	}
 
+	/**
+	 * Select a item by index
+	 *
+	 * @param selectedIndex The index of the item should be selected
+	 */
 	public void setSelectedIndex(int selectedIndex) {
 		this.mSelectedIndex = selectedIndex;
 	}
 
+	/**
+	 * Get selected item index
+	 *
+	 * @return The index of selected item
+	 */
 	public int getSelectedIndex() {
 		return this.mSelectedIndex;
 	}
 
+	/**
+	 * Get selected item
+	 *
+	 * @return The selected item
+	 */
 	public @NonNull String getSelectedItem() {
 		return this.mItems.get(getSelectedIndex());
 	}
 
+	/**
+	 * Check if there are other items
+	 *
+	 * @return Result
+	 */
 	public boolean hasMoreSelect() {
 		return this.mItems.size() > 1;
 	}
 
+	/**
+	 * Set a new items list
+	 *
+	 * @param items Items list
+	 */
 	public void setItems(@NonNull List<String> items) {
 		this.setItems(items, 0);
 	}
 
+	/**
+	 * Set a new items list with selecting a item
+	 *
+	 * @param items Items list
+	 * @param selectedIndex The selected item index
+	 */
 	public void setItems(@NonNull List<String> items, int selectedIndex) {
 		if (items != null && !items.isEmpty()) {
 			this.mItems = items;
@@ -59,11 +90,23 @@ public class BreadcrumbItem {
 		}
 	}
 
-	public List<String> getItems() {
+	/**
+	 * Get items list
+	 *
+	 * @return Items List
+	 */
+	public @NonNull List<String> getItems() {
 		return mItems;
 	}
 
-	public static BreadcrumbItem createSimpleItem(String title) {
+	/**
+	 * Create a simple BreadcrumbItem with single item
+	 *
+	 * @param title Item title
+	 * @return Simple BreadcrumbItem
+	 * @see BreadcrumbItem
+	 */
+	public static BreadcrumbItem createSimpleItem(@NonNull String title) {
 		return new BreadcrumbItem(Collections.singletonList(title));
 	}
 

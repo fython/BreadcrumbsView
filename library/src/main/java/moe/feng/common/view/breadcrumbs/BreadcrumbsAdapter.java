@@ -1,6 +1,9 @@
 package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
@@ -33,23 +36,23 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		DROPDOWN_OFFSET_Y_FIX = parent.getResources().getDimensionPixelOffset(R.dimen.dropdown_offset_y_fix_value);
 	}
 
-	public ArrayList<BreadcrumbItem> getItems() {
+	public @NonNull ArrayList<BreadcrumbItem> getItems() {
 		return this.items;
 	}
 
-	public void setItems(ArrayList<BreadcrumbItem> items) {
+	public void setItems(@NonNull ArrayList<BreadcrumbItem> items) {
 		this.items = items;
 	}
 
-	public void setCallback(BreadcrumbsCallback callback) {
+	public void setCallback(@Nullable BreadcrumbsCallback callback) {
 		this.callback = callback;
 	}
 
-	public BreadcrumbsCallback getCallback() {
+	public @Nullable BreadcrumbsCallback getCallback() {
 		return this.callback;
 	}
 
-	public void setPopupThemeId(int popupThemeId) {
+	public void setPopupThemeId(@IdRes int popupThemeId) {
 		this.mPopupThemeId = popupThemeId;
 	}
 
@@ -100,7 +103,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		}
 
 		@Override
-		public void setItem(BreadcrumbItem item) {
+		public void setItem(@NonNull BreadcrumbItem item) {
 			super.setItem(item);
 			button.setText(item.getSelectedItem());
 			button.setTextColor(
@@ -136,7 +139,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		}
 
 		@Override
-		public void setItem(BreadcrumbItem item) {
+		public void setItem(@NonNull BreadcrumbItem item) {
 			super.setItem(item);
 			imageButton.setClickable(item.hasMoreSelect());
 			if (item.hasMoreSelect()) {
@@ -187,7 +190,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 			super(itemView);
 		}
 
-		public void setItem(T item) {
+		public void setItem(@NonNull T item) {
 			this.item = item;
 		}
 
