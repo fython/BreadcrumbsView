@@ -1,8 +1,8 @@
 # BreadcrumbsView
 
-[![](https://jitpack.io/v/moe.feng/BreadcrumbsView.svg)](https://jitpack.io/#moe.feng/BreadcrumbsView)
+[![](https://jitpack.io/v/moe.feng/BreadcrumbsView.svg)](https://jitpack.io/#moe.feng/BreadcrumbsView) [中文说明](https://github.com/fython/BreadcrumbsView/wiki/%E4%B8%AD%E6%96%87-README.md)
 
-<img src="./.readme/breadcrumbsview.png" width="50%"/>
+<img src="./.readme/breadcrumbsview.png" width="30%"/>
 
 Material Design Breadcrumbs Navigation Widget on Android (SDK 19+, Maybe can be lower)
 
