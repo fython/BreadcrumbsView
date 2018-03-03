@@ -53,7 +53,7 @@ For example:
 
 ### Add/Remove `BreadcrumbItem`
 
-When your interface navigates to next step, create a new `BreadcrumbItem` and add it to `BreadcrumbsView`.
+When your interface navigates to next step, create a new `BreadcrumbItem` and add it to `BreadcrumbsView`. (After 0.2.0, you can implement your own `IBreadcrumbItem` to use.)
 
 Use `removeItemAfter(int)` or `removeLastItem` to remove items or last item.
 
@@ -64,7 +64,7 @@ You can set a callback for `BreadcrumbsView` to receive item click/changed event
 To simplify events, I recommend to use `DefaultBreadcrumbsCallback` :
 
 ```java
-new DefaultBreadcrumbsCallback() {
+new DefaultBreadcrumbsCallback<BreadcrumbItem>() {
 	@Override
 	public void onNavigateBack(BreadcrumbItem item, int position) {
 		// ...
@@ -82,7 +82,7 @@ new DefaultBreadcrumbsCallback() {
 ```
 MIT License
 
-Copyright (c) 2017 Fung Go (fython)
+Copyright (c) 2017-2018 Fung Go (fython)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
