@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.*;
-import moe.feng.common.view.breadcrumbs.model.BreadcrumbItem;
+import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	private final int DROPDOWN_OFFSET_Y_FIX;
 
-	private ArrayList<BreadcrumbItem> items;
+	private List<IBreadcrumbItem> items = new ArrayList<>();
 	private BreadcrumbsCallback callback;
 
 	private BreadcrumbsView parent;
@@ -26,21 +26,21 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 	private int mPopupThemeId = -1;
 
 	public BreadcrumbsAdapter(BreadcrumbsView parent) {
-		this(parent, new ArrayList<BreadcrumbItem>());
+		this(parent, new ArrayList<IBreadcrumbItem>());
 	}
 
-	public BreadcrumbsAdapter(BreadcrumbsView parent, ArrayList<BreadcrumbItem> items) {
+	public BreadcrumbsAdapter(BreadcrumbsView parent, ArrayList<IBreadcrumbItem> items) {
 		this.parent = parent;
 		this.items = items;
 		DROPDOWN_OFFSET_Y_FIX = parent.getResources().getDimensionPixelOffset(R.dimen.dropdown_offset_y_fix_value);
 	}
 
-	public @NonNull ArrayList<BreadcrumbItem> getItems() {
-		return this.items;
+	public @NonNull <E extends IBreadcrumbItem> List<E> getItems() {
+		return (List<E>) this.items;
 	}
 
-	public void setItems(@NonNull ArrayList<BreadcrumbItem> items) {
-		this.items = items;
+	public <E extends IBreadcrumbItem> void setItems(@NonNull List<E> items) {
+		this.items = (List<IBreadcrumbItem>) items;
 	}
 
 	public void setCallback(@Nullable BreadcrumbsCallback callback) {
@@ -55,20 +55,21 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		this.mPopupThemeId = popupThemeId;
 	}
 
-	@Override
-	public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	@NonNull
+    @Override
+	public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		if (viewType == R.layout.breadcrumbs_view_item_arrow) {
 			return new ArrowIconHolder(inflater.inflate(viewType, parent, false));
 		} else if (viewType == R.layout.breadcrumbs_view_item_text) {
 			return new BreadcrumbItemHolder(inflater.inflate(viewType, parent, false));
 		} else {
-			return null;
+			throw new IllegalArgumentException("Unknown view type:" + viewType);
 		}
 	}
 
 	@Override
-	public void onBindViewHolder(ItemHolder holder, int position) {
+	public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
 		int viewType = getItemViewType(position);
 		int truePos = viewType == R.layout.breadcrumbs_view_item_arrow ? ((position - 1) / 2) + 1 : position / 2;
 		holder.setItem(items.get(truePos));
@@ -84,7 +85,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		return position % 2 == 1 ? R.layout.breadcrumbs_view_item_arrow : R.layout.breadcrumbs_view_item_text;
 	}
 
-	class BreadcrumbItemHolder extends ItemHolder<BreadcrumbItem> {
+	class BreadcrumbItemHolder extends ItemHolder<IBreadcrumbItem> {
 
 		Button button;
 
@@ -102,9 +103,9 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		}
 
 		@Override
-		public void setItem(@NonNull BreadcrumbItem item) {
+		public void setItem(@NonNull IBreadcrumbItem item) {
 			super.setItem(item);
-			button.setText(item.getSelectedItem());
+			button.setText(item.getSelectedItem().toString());
 			button.setTextColor(
 					ViewUtils.getColorFromAttr(getContext(),
 							getAdapterPosition() == getItemCount() - 1
@@ -114,7 +115,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	}
 
-	class ArrowIconHolder extends ItemHolder<BreadcrumbItem> {
+	class ArrowIconHolder extends ItemHolder<IBreadcrumbItem> {
 
 		ImageButton imageButton;
 		ListPopupWindow popupWindow;
@@ -138,7 +139,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		}
 
 		@Override
-		public void setItem(@NonNull BreadcrumbItem item) {
+		public void setItem(@NonNull IBreadcrumbItem item) {
 			super.setItem(item);
 			imageButton.setClickable(item.hasMoreSelect());
 			if (item.hasMoreSelect()) {
@@ -148,7 +149,6 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 					map.put("text", obj.toString());
 					list.add(map);
 				}
-				// Kotlin: item.getItems().map { "text" to it.toString() }
 				ListAdapter adapter = new SimpleAdapter(getPopupThemedContext(), list, R.layout.breadcrumbs_view_dropdown_item, new String[] {"text"}, new int[] {android.R.id.text1});
 				popupWindow.setAdapter(adapter);
 				popupWindow.setWidth(ViewUtils.measureContentWidth(getPopupThemedContext(), adapter));

@@ -1,6 +1,6 @@
 package moe.feng.common.view.breadcrumbs;
 
-import moe.feng.common.view.breadcrumbs.model.BreadcrumbItem;
+import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
 
 /**
  * Simple callback to be invoked when BreadcrumbsView's item was clicked or changed.
@@ -8,18 +8,18 @@ import moe.feng.common.view.breadcrumbs.model.BreadcrumbItem;
  *
  * @see moe.feng.common.view.breadcrumbs.BreadcrumbsCallback
  */
-public abstract class DefaultBreadcrumbsCallback implements BreadcrumbsCallback {
+public abstract class DefaultBreadcrumbsCallback<T extends IBreadcrumbItem> implements BreadcrumbsCallback {
 
 	@Override
 	public void onItemClick(BreadcrumbsView view, int position) {
 		if (position == view.getItems().size() - 1) return;
 		view.removeItemAfter(position + 1);
-		this.onNavigateBack(view.getItems().get(position), position);
+		this.onNavigateBack((T) view.getItems().get(position), position);
 	}
 
 	@Override
-	public void onItemChange(BreadcrumbsView view, int parentPosition, String nextItem) {
-		BreadcrumbItem nextBreadcrumb = view.getItems().get(parentPosition + 1);
+	public void onItemChange(BreadcrumbsView view, int parentPosition, Object nextItem) {
+		T nextBreadcrumb = (T) view.getItems().get(parentPosition + 1);
 		nextBreadcrumb.setSelectedItem(nextItem);
 		view.removeItemAfter(parentPosition + 2);
 		if (parentPosition + 2 >= view.getItems().size()) {
@@ -34,7 +34,7 @@ public abstract class DefaultBreadcrumbsCallback implements BreadcrumbsCallback 
 	 * @param item The item that was navigated to
 	 * @param position The position of new location
 	 */
-	public abstract void onNavigateBack(BreadcrumbItem item, int position);
+	public abstract void onNavigateBack(T item, int position);
 
 	/**
 	 * Called when page should navigate to the location where was changed by popup menu
@@ -42,6 +42,6 @@ public abstract class DefaultBreadcrumbsCallback implements BreadcrumbsCallback 
 	 * @param newItem The item that was navigated to
 	 * @param changedPosition The position of changed location
 	 */
-	public abstract void onNavigateNewLocation(BreadcrumbItem newItem, int changedPosition);
+	public abstract void onNavigateNewLocation(T newItem, int changedPosition);
 
 }

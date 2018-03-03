@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 				createItem("Path 1"),
 				createItem("Path 2")
 		)));
-		mBreadcrumbsView.setCallback(new DefaultBreadcrumbsCallback() {
+		mBreadcrumbsView.setCallback(new DefaultBreadcrumbsCallback<BreadcrumbItem>() {
 			@Override
 			public void onNavigateBack(BreadcrumbItem item, int position) {
 				Snackbar.make(

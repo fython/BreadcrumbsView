@@ -11,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import moe.feng.common.view.breadcrumbs.model.BreadcrumbItem;
+
+import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BreadcrumbsView extends FrameLayout {
 
@@ -27,6 +29,9 @@ public class BreadcrumbsView extends FrameLayout {
 	 * Popup Menu Theme Id
 	 */
 	private int mPopupThemeId = -1;
+
+    private static final String KEY_SUPER_STATES = BuildConfig.APPLICATION_ID + ".superStates";
+    private static final String KEY_BREADCRUMBS = BuildConfig.APPLICATION_ID + ".breadcrumbs";
 
 	public BreadcrumbsView(Context context) {
 		this(context, null);
@@ -82,7 +87,7 @@ public class BreadcrumbsView extends FrameLayout {
 	 *
 	 * @return Breadcrumb Items
 	 */
-	public @Nullable ArrayList<BreadcrumbItem> getItems() {
+	public @NonNull List<IBreadcrumbItem> getItems() {
 		return mAdapter.getItems();
 	}
 
@@ -91,11 +96,8 @@ public class BreadcrumbsView extends FrameLayout {
 	 *
 	 * @return Current item
 	 */
-	public @Nullable BreadcrumbItem getCurrentItem() {
-		if (mAdapter.getItems().size() <= 0) {
-			return null;
-		}
-		return mAdapter.getItems().get(mAdapter.getItems().size() - 1);
+	public @NonNull <E extends IBreadcrumbItem> E getCurrentItem() {
+		return mAdapter.<E>getItems().get(mAdapter.getItems().size() - 1);
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class BreadcrumbsView extends FrameLayout {
 	 *
 	 * @param items Target list
 	 */
-	public void setItems(@Nullable ArrayList<BreadcrumbItem> items) {
+	public <E extends IBreadcrumbItem> void setItems(@NonNull List<E> items) {
 		mAdapter.setItems(items);
 		mAdapter.notifyDataSetChanged();
 		postDelayed(new Runnable() {
@@ -128,7 +130,7 @@ public class BreadcrumbsView extends FrameLayout {
 	 *
 	 * @param item New item
 	 */
-	public void addItem(@NonNull BreadcrumbItem item) {
+	public <E extends IBreadcrumbItem> void addItem(@NonNull E item) {
 		int oldSize = mAdapter.getItemCount();
 		mAdapter.getItems().add(item);
 		mAdapter.notifyItemRangeInserted(oldSize, 2);
@@ -179,7 +181,7 @@ public class BreadcrumbsView extends FrameLayout {
 	 * @see BreadcrumbsCallback
 	 * @see DefaultBreadcrumbsCallback
 	 */
-	public void setCallback(@Nullable BreadcrumbsCallback callback) {
+	public <T> void setCallback(@Nullable BreadcrumbsCallback<T> callback) {
 		mAdapter.setCallback(callback);
 	}
 
@@ -189,46 +191,28 @@ public class BreadcrumbsView extends FrameLayout {
 	 * @return Callback
 	 * @see BreadcrumbsCallback
 	 */
-	public @Nullable BreadcrumbsCallback getCallback() {
+	public @Nullable <T> BreadcrumbsCallback<T> getCallback() {
 		return mAdapter.getCallback();
 	}
 
 	// Save/Restore View Instance State
 	@Override
 	public Parcelable onSaveInstanceState() {
-		Bundle bundle = new Bundle();
-		State state = new State(super.onSaveInstanceState(), getItems());
-		bundle.putParcelable(State.STATE, state);
-		return bundle;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_SUPER_STATES, super.onSaveInstanceState());
+        bundle.putParcelableArrayList(KEY_BREADCRUMBS, new ArrayList<>(mAdapter.getItems()));
+        return bundle;
 	}
 
 	@Override
 	public void onRestoreInstanceState(Parcelable state) {
 		if (state instanceof Bundle) {
-			Bundle bundle = (Bundle) state;
-			State viewState = bundle.getParcelable(State.STATE);
-			super.onRestoreInstanceState(viewState.getSuperState());
-			setItems(viewState.getItems());
-			return;
+            Bundle bundle = (Bundle) state;
+            super.onRestoreInstanceState(bundle.getParcelable(KEY_SUPER_STATES));
+            setItems(bundle.<IBreadcrumbItem>getParcelableArrayList(KEY_BREADCRUMBS));
+            return;
 		}
 		super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
-	}
-
-	protected static class State extends BaseSavedState {
-
-		private static final String STATE = BreadcrumbsView.class.getSimpleName() + ".STATE";
-
-		private final ArrayList<BreadcrumbItem> items;
-
-		State(Parcelable superState, ArrayList<BreadcrumbItem> items) {
-			super(superState);
-			this.items = items;
-		}
-
-		ArrayList<BreadcrumbItem> getItems() {
-			return this.items;
-		}
-
 	}
 
 }

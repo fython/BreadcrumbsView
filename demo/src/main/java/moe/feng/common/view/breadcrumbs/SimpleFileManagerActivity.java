@@ -45,7 +45,7 @@ public class SimpleFileManagerActivity extends AppCompatActivity {
 			}
 		});
 
-		mBreadcrumbsView.setCallback(new DefaultBreadcrumbsCallback() {
+		mBreadcrumbsView.setCallback(new DefaultBreadcrumbsCallback<BreadcrumbItem>() {
 			@Override
 			public void onNavigateBack(BreadcrumbItem item, int position) {
 				currentLocation = getPath(position);
