@@ -1,17 +1,28 @@
+ext {
+	supportLibraryVersion = '27.1.0'
+
+	minSdkVersion = 19
+	targetSdkVersion = 27
+	buildToolsVersion = "27.0.3"
+	versionCode = 4
+	versionName = "0.2.0"
+}
+
 buildscript {
     repositories {
         jcenter()
+	    google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
+	    google()
         maven { url 'https://jitpack.io' }
-        maven { url 'https://maven.google.com' }
     }
 }
 

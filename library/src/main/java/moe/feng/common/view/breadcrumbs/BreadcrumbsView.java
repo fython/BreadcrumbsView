@@ -14,7 +14,6 @@ import android.widget.FrameLayout;
 import moe.feng.common.view.breadcrumbs.model.BreadcrumbItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BreadcrumbsView extends FrameLayout {
 

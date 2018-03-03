@@ -6,6 +6,6 @@
 		android:layout_height="match_parent"
 		android:paddingTop="12dp"
 		android:paddingBottom="12dp"
-		android:background="?android:attr/selectableItemBackground"
+		android:background="?android:attr/selectableItemBackgroundBorderless"
 		android:src="@drawable/ic_chevron_right_black_24dp"
 		android:tint="?android:attr/textColorSecondary"/>
