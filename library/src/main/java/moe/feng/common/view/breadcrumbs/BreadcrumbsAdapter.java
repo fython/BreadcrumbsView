@@ -87,11 +87,11 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	class BreadcrumbItemHolder extends ItemHolder<IBreadcrumbItem> {
 
-		Button button;
+		TextView button;
 
 		BreadcrumbItemHolder(View itemView) {
 			super(itemView);
-			button = (Button) itemView;
+			button = (TextView) itemView;
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
