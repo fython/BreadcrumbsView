@@ -1,9 +1,11 @@
 package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.*;
@@ -122,7 +124,11 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 		ArrowIconHolder(View itemView) {
 			super(itemView);
+			Drawable normalDrawable = getContext().getResources().getDrawable(R.drawable.ic_chevron_right_black_24dp);
+			Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
+			DrawableCompat.setTint(wrapDrawable, ViewUtils.getColorFromAttr(getContext(), android.R.attr.textColorSecondary));
 			imageButton = (ImageButton) itemView;
+			imageButton.setImageDrawable(wrapDrawable);
 			imageButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {

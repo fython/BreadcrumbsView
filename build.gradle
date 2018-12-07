@@ -4,8 +4,8 @@ ext {
 	minSdkVersion = 19
 	targetSdkVersion = 27
 	buildToolsVersion = "27.0.3"
-	versionCode = 4
-	versionName = "0.2.0"
+	versionCode = 5
+	versionName = "0.2.1"
 }
 
 buildscript {
@@ -14,7 +14,7 @@ buildscript {
 	    google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
