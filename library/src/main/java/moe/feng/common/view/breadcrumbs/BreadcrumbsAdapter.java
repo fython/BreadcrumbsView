@@ -2,11 +2,11 @@ package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.*;
 import android.widget.*;
 import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;

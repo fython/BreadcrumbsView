@@ -1,7 +1,7 @@
 package moe.feng.common.view.breadcrumbs;
 
 import android.app.Application;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class App extends Application
 {

@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion rootProject.ext.targetSdkVersion
+    compileSdkVersion rootProject.ext.targetSdkVersion
     defaultConfig {
         applicationId "moe.feng.common.view.breadcrumbs.demo"
-	    minSdkVersion rootProject.ext.minSdkVersion
-	    targetSdkVersion rootProject.ext.targetSdkVersion
-	    versionCode rootProject.ext.versionCode
-	    versionName rootProject.ext.versionName
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -19,8 +19,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':library')
-	compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-	compile "com.android.support:design:$supportLibraryVersion"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':library')
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.androidxAppCompatVersion"
+    implementation "com.google.android.material:material:$rootProject.ext.androidxMaterialVersion"
 }
