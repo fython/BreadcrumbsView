@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BreadcrumbsView">
+        <item name="crumbsTextColor">?android:attr/textColorSecondary</item>
+        <item name="crumbsSelectedTextColor">?android:attr/textColorPrimary</item>
+    </style>
+</resources>

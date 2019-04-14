@@ -3,6 +3,8 @@
 
 	<declare-styleable name="BreadcrumbsView">
 		<attr name="popupTheme"/>
+		<attr name="crumbsTextColor" format="color"/>
+		<attr name="crumbsSelectedTextColor" format="color"/>
 	</declare-styleable>
 
 </resources>

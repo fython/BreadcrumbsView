@@ -1,21 +1,22 @@
 package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
 
 public class BreadcrumbsView extends FrameLayout {
 
@@ -29,6 +30,9 @@ public class BreadcrumbsView extends FrameLayout {
 	 * Popup Menu Theme Id
 	 */
 	private int mPopupThemeId = -1;
+
+	private ColorStateList mTextColor;
+	private ColorStateList mSelectedTextColor;
 
     private static final String KEY_SUPER_STATES = BuildConfig.APPLICATION_ID + ".superStates";
     private static final String KEY_BREADCRUMBS = BuildConfig.APPLICATION_ID + ".breadcrumbs";
@@ -45,8 +49,10 @@ public class BreadcrumbsView extends FrameLayout {
 		super(context, attrs, defStyleAttr);
 
 		if (attrs != null) {
-			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BreadcrumbsView, defStyleAttr, 0);
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BreadcrumbsView, defStyleAttr, R.style.BreadcrumbsView);
 			mPopupThemeId = a.getResourceId(R.styleable.BreadcrumbsView_popupTheme, -1);
+			mTextColor = a.getColorStateList(R.styleable.BreadcrumbsView_crumbsTextColor);
+			mSelectedTextColor = a.getColorStateList(R.styleable.BreadcrumbsView_crumbsSelectedTextColor);
 			a.recycle();
 		}
 
@@ -215,4 +221,11 @@ public class BreadcrumbsView extends FrameLayout {
 		super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
 	}
 
+	public ColorStateList getTextColor() {
+		return mTextColor;
+	}
+
+	public ColorStateList getSelectedTextColor() {
+		return mSelectedTextColor;
+	}
 }

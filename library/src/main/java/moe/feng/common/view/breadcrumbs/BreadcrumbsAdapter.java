@@ -2,19 +2,29 @@ package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.RecyclerView;
-import android.view.*;
-import android.widget.*;
-import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListPopupWindow;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
 
 class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHolder> {
 
@@ -108,11 +118,13 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		public void setItem(@NonNull IBreadcrumbItem item) {
 			super.setItem(item);
 			button.setText(item.getSelectedItem().toString());
-			button.setTextColor(
+			/*button.setTextColor(
 					ViewUtils.getColorFromAttr(getContext(),
 							getAdapterPosition() == getItemCount() - 1
 									? android.R.attr.textColorPrimary : android.R.attr.textColorSecondary)
-			);
+			);*/
+			button.setTextColor(getAdapterPosition() == getItemCount() - 1 ? parent.getSelectedTextColor()
+					: parent.getTextColor());
 		}
 
 	}
@@ -126,7 +138,8 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 			super(itemView);
 			Drawable normalDrawable = getContext().getResources().getDrawable(R.drawable.ic_chevron_right_black_24dp);
 			Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
-			DrawableCompat.setTint(wrapDrawable, ViewUtils.getColorFromAttr(getContext(), android.R.attr.textColorSecondary));
+			// DrawableCompat.setTint(wrapDrawable, ViewUtils.getColorFromAttr(getContext(), android.R.attr.textColorSecondary));
+			DrawableCompat.setTintList(wrapDrawable, parent.getTextColor());
 			imageButton = (ImageButton) itemView;
 			imageButton.setImageDrawable(wrapDrawable);
 			imageButton.setOnClickListener(new View.OnClickListener() {
