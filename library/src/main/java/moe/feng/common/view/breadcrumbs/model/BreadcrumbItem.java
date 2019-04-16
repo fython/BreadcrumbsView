@@ -101,6 +101,27 @@ public class BreadcrumbItem implements IBreadcrumbItem<String> {
 		return new BreadcrumbItem(Collections.singletonList(title));
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BreadcrumbItem other = (BreadcrumbItem ) obj;
+		if (mSelectedIndex != other.mSelectedIndex)
+			return false;
+		if (mItems.size() != other.mItems.size())
+			return false;
+		for (int i = 0; i < mItems.size(); i++) {
+			if (!mItems.get(i).equals(other.mItems.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
     @Override
     public int describeContents() {
         return 0;

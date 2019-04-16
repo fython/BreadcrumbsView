@@ -14,7 +14,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
 
@@ -33,6 +33,8 @@ public class BreadcrumbsView extends FrameLayout {
 
 	private ColorStateList mTextColor;
 	private ColorStateList mSelectedTextColor;
+	private int mTextSize;
+	private int mTextPadding;
 
     private static final String KEY_SUPER_STATES = BuildConfig.APPLICATION_ID + ".superStates";
     private static final String KEY_BREADCRUMBS = BuildConfig.APPLICATION_ID + ".breadcrumbs";
@@ -53,6 +55,8 @@ public class BreadcrumbsView extends FrameLayout {
 			mPopupThemeId = a.getResourceId(R.styleable.BreadcrumbsView_popupTheme, -1);
 			mTextColor = a.getColorStateList(R.styleable.BreadcrumbsView_crumbsTextColor);
 			mSelectedTextColor = a.getColorStateList(R.styleable.BreadcrumbsView_crumbsSelectedTextColor);
+            mTextSize = a.getDimensionPixelSize(R.styleable.BreadcrumbsView_crumbsTextSize, -1);
+            mTextPadding = a.getDimensionPixelSize(R.styleable.BreadcrumbsView_crumbsPadding, -1);
 			a.recycle();
 		}
 
@@ -70,8 +74,7 @@ public class BreadcrumbsView extends FrameLayout {
 			mRecyclerView = new RecyclerView(getContext());
 
 			// Create Horizontal LinearLayoutManager
-			LinearLayoutManager layoutManager = new LinearLayoutManager(
-					getContext(), LinearLayoutManager.HORIZONTAL, ViewUtils.isRtlLayout(getContext()));
+			BreadcrumbsLayoutManager layoutManager = new BreadcrumbsLayoutManager(getContext(), RecyclerView.HORIZONTAL, ViewUtils.isRtlLayout(getContext()));
 			mRecyclerView.setLayoutManager(layoutManager);
 			mRecyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
 
@@ -120,6 +123,18 @@ public class BreadcrumbsView extends FrameLayout {
 				mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
 			}
 		}, 500);
+	}
+
+	/**
+	 * Set breadcrumb items list and animates them correctly with recyclerview diff
+	 *
+	 * @param items Target list
+	 */
+	public <E extends IBreadcrumbItem> void updateItems(@NonNull List<E> items) {
+		DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new BreadcrumbsDiffCallback((List<IBreadcrumbItem>)items, mAdapter.getItems()));
+		mAdapter.setItems(items);
+		diffResult.dispatchUpdatesTo(mAdapter);
+		postScroll(-1, 0);
 	}
 
 	/**
@@ -221,6 +236,17 @@ public class BreadcrumbsView extends FrameLayout {
 		super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
 	}
 
+	private void postScroll(final int index, final int delay) {
+		mRecyclerView.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				int max = mAdapter.getItemCount() - 1;
+				int i = index == -1 ? max : Math.max(index, max);
+				mRecyclerView.smoothScrollToPosition(i);
+			}
+		}, delay);
+	}
+
 	public ColorStateList getTextColor() {
 		return mTextColor;
 	}
@@ -228,4 +254,12 @@ public class BreadcrumbsView extends FrameLayout {
 	public ColorStateList getSelectedTextColor() {
 		return mSelectedTextColor;
 	}
+
+	public int getTextSize() {
+	    return mTextSize;
+    }
+
+    public int getTextPadding() {
+	    return mTextPadding;
+    }
 }

@@ -5,6 +5,8 @@
 		<attr name="popupTheme"/>
 		<attr name="crumbsTextColor" format="color"/>
 		<attr name="crumbsSelectedTextColor" format="color"/>
+		<attr name="crumbsTextSize" format="dimension"/>
+		<attr name="crumbsPadding" format="dimension"/>
 	</declare-styleable>
 
 </resources>
