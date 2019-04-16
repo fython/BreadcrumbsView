@@ -30,7 +30,6 @@ public class BreadcrumbsDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-
         // we consider same positions as same items
         return oldItemPosition == newItemPosition;
     }
@@ -44,8 +43,7 @@ public class BreadcrumbsDiffCallback extends DiffUtil.Callback {
         }
         int pos1 = BreadcrumbsUtil.getTruePosition(type1, oldItemPosition);
         int pos2 = BreadcrumbsUtil.getTruePosition(type2, newItemPosition);
-        boolean areContentsTheSame = oldItems.get(pos1).equals(newItems.get(pos2));
-        return areContentsTheSame;
+        return oldItems.get(pos1).equals(newItems.get(pos2));
     }
 
     @Nullable
