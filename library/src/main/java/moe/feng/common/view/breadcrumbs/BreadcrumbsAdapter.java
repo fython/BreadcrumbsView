@@ -2,6 +2,7 @@ package moe.feng.common.view.breadcrumbs;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,19 +83,24 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 
 	@Override
 	public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
+		onBindViewHolder(holder, position, null);
+	}
+
+	@Override
+	public void onBindViewHolder(@NonNull ItemHolder holder, int position, List<Object> payloads) {
 		int viewType = getItemViewType(position);
-		int truePos = viewType == R.layout.breadcrumbs_view_item_arrow ? ((position - 1) / 2) + 1 : position / 2;
+		int truePos = BreadcrumbsUtil.getTruePosition(viewType, position);
 		holder.setItem(items.get(truePos));
 	}
 
 	@Override
 	public int getItemCount() {
-		return (items != null && !items.isEmpty()) ? (items.size() * 2 - 1) : 0;
+		return BreadcrumbsUtil.getAdapterCount(items);
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return position % 2 == 1 ? R.layout.breadcrumbs_view_item_arrow : R.layout.breadcrumbs_view_item_text;
+		return BreadcrumbsUtil.getItemViewType(position);
 	}
 
 	class BreadcrumbItemHolder extends ItemHolder<IBreadcrumbItem> {
@@ -104,14 +110,19 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		BreadcrumbItemHolder(View itemView) {
 			super(itemView);
 			button = (TextView) itemView;
-			button.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (callback != null) {
+			// enable touch feedback only for items that have a callback
+			if (callback != null) {
+				button.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
 						callback.onItemClick(parent, getAdapterPosition() / 2);
 					}
-				}
-			});
+				});
+			} else {
+				button.setClickable(false);
+			}
+			button.setTextSize(TypedValue.COMPLEX_UNIT_PX, parent.getTextSize());
+			button.setPadding(parent.getTextPadding(), parent.getTextPadding(), parent.getTextPadding(), parent.getTextPadding());
 		}
 
 		@Override
@@ -126,7 +137,6 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 			button.setTextColor(getAdapterPosition() == getItemCount() - 1 ? parent.getSelectedTextColor()
 					: parent.getTextColor());
 		}
-
 	}
 
 	class ArrowIconHolder extends ItemHolder<IBreadcrumbItem> {
