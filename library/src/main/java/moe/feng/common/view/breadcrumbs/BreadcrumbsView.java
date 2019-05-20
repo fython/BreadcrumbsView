@@ -120,9 +120,15 @@ public class BreadcrumbsView extends FrameLayout {
 		postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+				performSafeSmoothScrollToPosition(mAdapter.getItemCount() - 1);
 			}
 		}, 500);
+	}
+
+	private void performSafeSmoothScrollToPosition(int position) {
+		if (position >= 0 && position < mAdapter.getItemCount()) {
+			mRecyclerView.smoothScrollToPosition(position);
+		}
 	}
 
 	/**
@@ -159,7 +165,7 @@ public class BreadcrumbsView extends FrameLayout {
 		postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+				performSafeSmoothScrollToPosition(mAdapter.getItemCount() - 1);
 			}
 		}, 500);
 	}
@@ -182,7 +188,7 @@ public class BreadcrumbsView extends FrameLayout {
 				public void run() {
 					int currentPos = afterPos * 2 - 1 - 1;
 					mAdapter.notifyItemChanged(currentPos);
-					mRecyclerView.smoothScrollToPosition(currentPos);
+					performSafeSmoothScrollToPosition(currentPos);
 				}
 			}, 100);
 		}
@@ -242,7 +248,7 @@ public class BreadcrumbsView extends FrameLayout {
 			public void run() {
 				int max = mAdapter.getItemCount() - 1;
 				int i = index == -1 ? max : Math.max(index, max);
-				mRecyclerView.smoothScrollToPosition(i);
+				performSafeSmoothScrollToPosition(i);
 			}
 		}, delay);
 	}
