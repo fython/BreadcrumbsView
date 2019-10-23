@@ -10,7 +10,6 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
-import android.widget.ListPopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -23,6 +22,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatDrawableManager;
+import androidx.appcompat.widget.ListPopupWindow;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import moe.feng.common.view.breadcrumbs.model.IBreadcrumbItem;
@@ -182,6 +182,7 @@ class BreadcrumbsAdapter extends RecyclerView.Adapter<BreadcrumbsAdapter.ItemHol
 		private void createPopupWindow() {
 			popupWindow = new ListPopupWindow(getPopupThemedContext());
 			popupWindow.setAnchorView(imageButton);
+			popupWindow.setModal(true);
 			popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
